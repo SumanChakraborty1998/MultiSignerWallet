@@ -23,25 +23,52 @@ contract("Multi Signer Wallet Testing", async (accounts) => {
 
   it("If you are not an owner, you can not create any transaction", async () => {
     try {
-      await instance.createTransaction(accounts[3], 100, { from: accounts[3] });
+      await instance.createTransaction(accounts[3], 100, {
+        from: accounts[3],
+        value: 1000,
+      });
     } catch (e) {
       // console.log(e);
       assert(e.reason === "You are not the Owner");
     }
   });
 
+  it("Sending amount should be greater than zero", async () => {
+    try {
+      await instance.createTransaction(accounts[9], 0, {
+        from: owner1,
+        value: 1000,
+      });
+    } catch (e) {
+      // console.log(e);
+      assert(e.reason === "Invalid amount");
+    }
+  });
+
+  it("Parameter amount should be less than the sent balance", async () => {
+    try {
+      await instance.createTransaction(accounts[9], 10, {
+        from: owner1,
+        value: 10,
+      });
+    } catch (e) {
+      // console.log(e);
+      assert(e.reason === "Amount should be less");
+    }
+  });
+
   it("Transaction can be created succesfully", async () => {
     await instance.createTransaction(accounts[3], 100, {
       from: owner1,
+      value: 1000,
     });
     assert((await instance.transactionIndex()).toNumber() === 1);
   });
 
   // it("If you are not an owner, you can not send any transaction", async () => {
   //   try {
-  //     await instance.sendTransaction(1, {
+  //     await instance.sendTransaction(0, {
   //       from: accounts[4],
-  //       value: 10000000000000000000000000,
   //     });
   //   } catch (e) {
   //     // console.log("Suman Here");

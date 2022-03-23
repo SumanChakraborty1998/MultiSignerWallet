@@ -79,10 +79,13 @@ contract MultiSig {
 
     function createTransaction(address payable _to, uint256 _amount)
         external
+        payable
         authenticate
     {
         require(_to != address(0), "Invalid address");
         require(_amount > 0, "Invalid amount");
+        require(_amount < msg.value, "Amount should be less");
+
         transactions[transactionIndex] = Transaction(
             transactionIndex,
             _to,
@@ -95,17 +98,15 @@ contract MultiSig {
 
     function sendTransaction(uint256 _id)
         external
-        payable
         authenticate
         checkSentOrNot(_id)
         checkApprovals(_id)
     {
-        require(msg.value == transactions[_id].amount, "Invalid amount");
+        require(_id < transactionIndex, "Invalid transaction id");
         address payable to = transactions[_id].to;
-        to.transfer(msg.value);
-        // to.transfer(transactions[_id].amount);
+        to.transfer(transactions[_id].amount);
+
         transactions[_id].isSent = true;
-        return;
     }
 
     function signTransaction(uint256 _id) external authenticate {

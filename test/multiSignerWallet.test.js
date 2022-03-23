@@ -69,6 +69,8 @@ contract("Multi Signer Wallet Testing", async (accounts) => {
   //   try {
   //     await instance.sendTransaction(0, {
   //       from: accounts[4],
+  //       value: 1000000,
+  //       gas: 1000000,
   //     });
   //   } catch (e) {
   //     // console.log("Suman Here");

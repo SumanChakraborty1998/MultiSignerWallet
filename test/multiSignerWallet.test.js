@@ -37,42 +37,87 @@ contract("Multi Signer Wallet Testing", async (accounts) => {
     assert((await instance.transactionIndex()).toNumber() === 1);
   });
 
-  it("If you are not an owner, you can not send any transaction", async () => {
+  // it("If you are not an owner, you can not send any transaction", async () => {
+  //   try {
+  //     await instance.sendTransaction(1, {
+  //       from: accounts[4],
+  //       value: 10000000000000000000000000,
+  //     });
+  //   } catch (e) {
+  //     // console.log("Suman Here");
+  //     console.log(e);
+  //     assert(e.reason === "You are not the Owner");
+  //   }
+  //   // expectRevert(
+  //   //   instance.sendTransaction(0, { from: accounts[4], value: 1000000 }),
+  //   //   "You are not the Ownerttttt",
+  //   // );
+  // });
+
+  // it("You can not send a transaction, if all owners are not approves the transaction", async () => {
+  //   try {
+  //     await instance.sendTransaction(0, {
+  //       from: owner1,
+  //       value: 1000000,
+  //       // gas: 80000,
+  //     });
+  //   } catch (e) {
+  //     console.log(e);
+  //     assert(e.reason === "Transaction Requires Approvals");
+  //   }
+  // });
+
+  it("You can not sign the transaction, if you are not an owner", async () => {
     try {
-      await instance.sendTransaction(1, {
-        from: accounts[4],
-        value: 100,
-      });
+      await instance.signTransaction(0, { from: accounts[3] });
     } catch (e) {
-      // console.log("Suman Here");
-      console.log(e);
+      // console.log(e);
       assert(e.reason === "You are not the Owner");
     }
-    // expectRevert(
-    //   instance.sendTransaction(0, { from: accounts[4], value: 1000000 }),
-    //   "You are not the Ownerrrr",
-    // );
   });
 
-  it("You can not send a transaction, if all owners are not approves the transaction", async () => {
+  it("You can not sign the transaction, if you send invalid Transaction Id", async () => {
     try {
-      instance.sendTransaction(0, {
-        from: owner1,
-        value: 1000000,
-        // gas: 80000,
-      });
+      await instance.signTransaction(1, { from: owner2 });
     } catch (e) {
-      console.log(e);
-      assert(e.reason === "Transaction Requires Approvals");
+      // console.log(e);
+      assert(e.reason === "Invalid transaction id");
     }
   });
 
-  it("Only Owners can sign the transaction", async () => {
+  it("Any owner can not sign one transaction more than once", async () => {
     try {
-      instance.signTransaction(0, { from: accounts[3] });
+      await instance.signTransaction(0, { from: owner2 });
+      await instance.signTransaction(0, { from: owner2 });
     } catch (e) {
-      console.log(e);
+      // console.log(e);
+      assert(e.reason === "Already Signed by You");
+    }
+  });
+
+  it("You can not assign any new owner, if you are not an owner", async () => {
+    try {
+      await instance.assignOwner(accounts[3], { from: accounts[3] });
+    } catch (e) {
+      // console.log(e);
       assert(e.reason === "You are not the Owner");
     }
+  });
+
+  it("Only Owners can assign new owner", async () => {
+    await instance.assignOwner(accounts[3], { from: owner1 });
+    const newOwners = await instance.getOwners({ from: owner1 });
+    assert(newOwners[3] === accounts[3], "New owner is not added");
+  });
+
+  it("Only owners can see the owners List", async () => {
+    const owners = await instance.getOwners({ from: owner1 });
+    assert(
+      owners[0] === owner1 &&
+        owners[1] === owner2 &&
+        owners[2] === owner3 &&
+        owners[3] === accounts[3],
+      "Owners are not equal",
+    );
   });
 });

@@ -15,7 +15,7 @@ contract MultiSig {
     address[] private owners;
 
     mapping(address => mapping(uint256 => bool)) approvals; //Approvals Object
-    mapping(uint256 => Transaction) transactions; //Transaction Object
+    mapping(uint256 => Transaction) public transactions; //Transaction Object
 
     /**
     const owner1="0x12";
@@ -109,12 +109,13 @@ contract MultiSig {
     }
 
     function signTransaction(uint256 _id) external authenticate {
+        require(_id < transactionIndex, "Invalid transaction id");
+        require(approvals[msg.sender][_id] == false, "Already Signed by You");
+
         if (approvals[msg.sender][_id] == false) {
             approvals[msg.sender][_id] = true;
             transactions[_id].approvals++;
         }
-
-        require(approvals[msg.sender][_id], "Already Signed by You...");
     }
 
     function assignOwner(address _newOwner) external authenticate {

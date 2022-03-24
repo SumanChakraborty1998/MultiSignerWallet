@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/SumanChakraborty1998/MultiSignerWallet#readme",
   "dependencies": {
-    "@openzeppelin/test-helpers": "^0.5.15"
+    "@openzeppelin/test-helpers": "^0.5.15",
+    "dotenv": "^16.0.0",
+    "truffle-hdwallet-provider": "^1.0.17"
   }
 }

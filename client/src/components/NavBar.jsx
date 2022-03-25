@@ -7,11 +7,14 @@ import IconButton from "@mui/material/IconButton";
 
 import Button from "@mui/material/Button";
 
+import ReplayIcon from "@mui/icons-material/Replay";
+
 export const NavBar = ({
   walletAddress,
   isLoading,
   handleDisconnectToWallet,
   handleConnectToWallet,
+  getAllData,
 }) => {
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -41,7 +44,26 @@ export const NavBar = ({
             >
               <Button
                 variant="contained"
+                size="large"
+                disabled={walletAddress === ""}
+                onClick={getAllData}
                 color="secondary"
+                startIcon={<ReplayIcon />}
+              >
+                Refresh
+              </Button>
+            </IconButton>
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              color="inherit"
+            >
+              <Button
+                variant="contained"
+                color="secondary"
+                size="large"
                 onClick={() =>
                   walletAddress === ""
                     ? handleConnectToWallet()

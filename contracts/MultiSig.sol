@@ -14,7 +14,7 @@ contract MultiSig {
 
     address[] private owners;
 
-    mapping(address => mapping(uint256 => bool)) private approvals; //Approvals Object
+    mapping(address => mapping(uint256 => bool)) public approvals; //Approvals Object
     mapping(uint256 => Transaction) public transactions; //Transaction Object
 
     /**
@@ -123,7 +123,7 @@ contract MultiSig {
         owners.push(_newOwner);
     }
 
-    function getOwners() external view authenticate returns (address[] memory) {
+    function getOwners() external view returns (address[] memory) {
         return owners;
     }
 

@@ -3,6 +3,7 @@ import MultiSigner from "../contracts/MultiSig.json";
 import { ethers } from "ethers";
 import { NavBar } from "./NavBar";
 import { Body } from "./Body";
+// import { useEffect } from "react";
 // import Typography from "@mui/material/Typography";
 
 export const Multisig = () => {
@@ -24,6 +25,7 @@ export const Multisig = () => {
       // Prompt user for account connections
       await provider.send("eth_requestAccounts", []);
       const signer = provider.getSigner();
+      console.log(signer);
       setTansactions([]);
       setwalletAddress(await signer.getAddress());
     } else {

@@ -51,6 +51,7 @@ export const Body = ({
   transactions,
   isAOwner,
   handleApproveTransaction,
+  handleSendMoney,
 }) => {
   const [recipient, setRecipient] = React.useState("");
   const [amount, setAmount] = React.useState("");
@@ -145,7 +146,7 @@ export const Body = ({
       {transactions.length > 0 ? (
         <TableContainer>
           <Table
-            sx={{ width: 1200, margin: "auto" }}
+            sx={{ width: 100, margin: "auto" }}
             aria-label="customized table"
           >
             <TableHead>
@@ -159,6 +160,7 @@ export const Body = ({
                   <>
                     <StyledTableCell>Approved By You ?</StyledTableCell>
                     <StyledTableCell>Want to Approve</StyledTableCell>
+                    <StyledTableCell>Send Money</StyledTableCell>
                   </>
                 ) : null}
               </TableRow>
@@ -185,6 +187,18 @@ export const Body = ({
                           onClick={() => handleApproveTransaction(row.id)}
                         >
                           Approve
+                        </Button>
+                      </StyledTableCell>
+
+                      <StyledTableCell>
+                        <Button
+                          disabled={
+                            row.approvals !== owners.length || row.isSent
+                          }
+                          variant="outlined"
+                          onClick={() => handleSendMoney(row.id)}
+                        >
+                          Send
                         </Button>
                       </StyledTableCell>
                     </>

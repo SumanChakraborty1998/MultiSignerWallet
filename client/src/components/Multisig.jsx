@@ -136,6 +136,7 @@ export const Multisig = () => {
       // Prompt user for account connections
       await provider.send("eth_requestAccounts", []);
       const signer = provider.getSigner();
+
       const contractInstance = new ethers.Contract(
         contractAddress,
         abi,
@@ -146,7 +147,37 @@ export const Multisig = () => {
         .signTransaction(id, {
           from: walletAddress,
         })
-        .then(() => {
+        .then(async () => {
+          // await contractInstance.sendTransaction(id, { from: walletAddress });
+          setTimeout(() => {
+            getAllData();
+          }, 6000);
+          // setTimeout(getAllData, 7000);
+        });
+
+      // setTimeout(getAllData, 8000);
+    }
+  };
+
+  const handleSendMoney = async (id) => {
+    if (window.ethereum) {
+      setIsEntaracting(true);
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      // Prompt user for account connections
+      await provider.send("eth_requestAccounts", []);
+      const signer = provider.getSigner();
+
+      const contractInstance = new ethers.Contract(
+        contractAddress,
+        abi,
+        signer,
+      );
+
+      await contractInstance
+        .sendTransaction(id, {
+          from: walletAddress,
+        })
+        .then(async () => {
           setTimeout(() => {
             getAllData();
           }, 6000);
@@ -228,6 +259,7 @@ export const Multisig = () => {
           transactions={transactions}
           isAOwner={owners.includes(walletAddress)}
           handleApproveTransaction={handleApproveTransaction}
+          handleSendMoney={handleSendMoney}
         />
       )}
     </div>

@@ -31,7 +31,7 @@ export const NavBar = ({
             component="div"
             sx={{ fontSize: "30px", color: "#e783f7" }}
           >
-            𝓜𝓾𝓵𝓽𝓲 𝓢𝓲𝓰𝓷𝓮𝓻 𝓦𝓪𝓵𝓵𝓮𝓽
+            𝓡𝓪𝓳𝓪𝓜𝓸𝓽𝓸 𝓦𝓪𝓵𝓵𝓮𝓽
           </Typography>
 
           <div>
